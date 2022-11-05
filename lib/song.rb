@@ -3,15 +3,16 @@ require 'active_support/inflector'
 
 class Song
 
-
+# method to get the name of a database table abstractically
   def self.table_name
     self.to_s.downcase.pluralize
   end
 
+  #method to get the table's column names which will be assigned to attributes
   def self.column_names
-    DB[:conn].results_as_hash = true
+    DB[:conn].results_as_hash = true  #ensures the return value from a database execution is a hash
 
-    sql = "pragma table_info('#{table_name}')"
+    sql = "PRAGMA table_info('#{table_name}')" #returns an array of hashes describing the table itself
 
     table_info = DB[:conn].execute(sql)
     column_names = []
@@ -40,7 +41,7 @@ class Song
   def table_name_for_insert
     self.class.table_name
   end
-
+  
   def values_for_insert
     values = []
     self.class.column_names.each do |col_name|
